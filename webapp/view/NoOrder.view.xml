@@ -1,0 +1,7 @@
+<mvc:View
+	height="100%"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	controllerName="com.minda.PlanVactual.controller.NoOrder">
+	<MessagePage showHeader="false" icon="sap-icon://filter"/>
+</mvc:View>

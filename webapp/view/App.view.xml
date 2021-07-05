@@ -1,0 +1,6 @@
+<mvc:View controllerName="com.minda.PlanVactual.controller.App" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m" xmlns:f="sap.f">
+	<Shell id="shell" appWidthLimited="false">
+		<!--<f:FlexibleColumnLayout id="App" layout="{layout>/layout}" backgroundDesign="Translucent"/>-->
+		<SplitApp id="App" mode="ShowHideMode" initialDetail="detail" initialMaster="master"></SplitApp>
+	</Shell>
+</mvc:View>

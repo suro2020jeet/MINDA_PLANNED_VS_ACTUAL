@@ -1,0 +1,55 @@
+<mvc:View displayBlock="true" controllerName="com.minda.PlanVactual.controller.Master" height="100%" xmlns="sap.m" xmlns:f="sap.f"
+	xmlns:mvc="sap.ui.core.mvc">
+	<Page backgroundDesign="List" busy="{listViewModel>/busy}" title="{listViewModel>/masterViewTitle}" showNavButton="false" showFooter="false">
+		<headerContent>
+			<!--<Button icon="sap-icon://sort" type="Emphasized" press="onSort" width="10%"/>-->
+		</headerContent>
+		<subHeader>
+			<OverflowToolbar>
+				<SearchField liveChange="onSearch" width="78%" placeholder="Aggreement Id"/>
+				<Button icon="sap-icon://sort" type="Emphasized" press="onSort" width="10%"/>
+			</OverflowToolbar>
+		</subHeader>
+		<content>
+			<Table mode="SingleSelectMaster" itemPress="onAllOrderPress">
+				<columns>
+					<Column ></Column>
+				</columns>
+				<items>
+					<ColumnListItem type="Active" selected="{listViewModel>/columListItemSelected}">
+						<cells>
+							<Title text="All Orders"/>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+			<Table sticky="HeaderToolbar" mode="SingleSelectMaster" id="table" items="{ path: 'aggrements>/results'}"
+				updateFinished="onUpdateFinished" itemPress="onListItemPress" growing="true" growingThreshold="18" growingScrollToLoad="true">
+				<columns>
+					<Column ></Column>
+				</columns>
+				<items>
+					<ColumnListItem type="Active">
+						<cells>
+							<VBox>
+								<ObjectIdentifier text="{aggrements>AgreementNo}" title="Order Id"/>
+								<ObjectIdentifier title="Validity"
+									text="{path: 'aggrements>StartDate', formatter: '.formatter.setDate'} to {path: 'aggrements>EndDate', formatter: '.formatter.setDate'}"/>
+							</VBox>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</content>
+		<footer>
+			<OverflowToolbar>
+				<FacetFilter id="idFacetFilter" type="Light" showPersonalization="true" showReset="true" reset="handleFacetFilterReset">
+					<FacetFilterList title="Order Id" key="AgreementNo" mode="MultiSelect" listClose="handleListClose"
+						items="{path: 'aggrements>/results', templateShareable: true}">
+						<FacetFilterItem text="{aggrements>AgreementNo}" key="{aggrements>AgreementNo}"/>
+					</FacetFilterList>
+				</FacetFilter>
+			</OverflowToolbar>
+		</footer>
+	</Page>
+</mvc:View>

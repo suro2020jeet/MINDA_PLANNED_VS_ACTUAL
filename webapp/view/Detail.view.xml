@@ -1,0 +1,205 @@
+<mvc:View displayBlock="true" controllerName="com.minda.PlanVactual.controller.Detail" height="100%" xmlns="sap.uxap"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:m="sap.m" xmlns:f="sap.f" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout">
+	<ObjectPageLayout busy="{detailViewModel>/busy}" id="ObjectPageLayout" showTitleInHeaderContent="true" alwaysShowContentHeader="false"
+		preserveHeaderStateOnScroll="false" headerContentPinnable="true" isChildPage="true" upperCaseAnchorBar="false">
+		<headerTitle>
+			<ObjectPageDynamicHeaderTitle >
+				<expandedHeading>
+					<m:Title text="{detailViewModel>/detailViewTitle}" wrapping="true" class="sapUiSmallMarginEnd"/>
+				</expandedHeading>
+				<snappedHeading>
+					<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
+						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+							<!--<f:Avatar src="../../../../../../../{products>ProductPicUrl}" displaySize="S" displayShape="Square"/>-->
+							<m:Title text="{detailViewModel>/detailViewTitle}" wrapping="true" class="sapUiTinyMarginEnd"/>
+						</m:FlexBox>
+					</m:FlexBox>
+				</snappedHeading>
+				<actions>
+					<ObjectPageHeaderActionButton visible="{= ${device>/system/phone}? true:false}" hideText="true" type="Transparent" icon="sap-icon://decline"
+						press="handleClose" tooltip="Go to Master List"/>
+					<ObjectPageHeaderActionButton icon="sap-icon://excel-attachment" type="Emphasized" hideText="false" text="Export to excel"
+						press="onPressDownload"/>
+				</actions>
+			</ObjectPageDynamicHeaderTitle>
+		</headerTitle>
+		<headerContent>
+			<m:FlexBox wrap="Wrap" visible="{detailViewModel>/felxBoxVisible}">
+				<f:Avatar src="sap-icon://user" displaySize="M" displayShape="Circle" class="sapUiTinyMarginEnd"></f:Avatar>
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:ObjectStatus class="customOSClass" title="Vendor Name" text="{detailViewModel>/VendorName}"/>
+					<m:ObjectStatus class="customOSClass" title="Order Type" text="{detailViewModel>/DocType}"/>
+					<m:ObjectStatus class="customOSClass" title="Payment Terms" text="{detailViewModel>/PmntTerms}"/>
+				</layout:VerticalLayout>
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<m:ObjectStatus class="customOSClass" title="Delivery Plant" text="{detailViewModel>/Plant}"/>
+					<m:ObjectStatus class="customOSClass" title="Validity"
+						text="{path: 'detailViewModel>/StartDate', formatter: '.formatter.setDate'} to {path: 'detailViewModel>/EndDate', formatter: '.formatter.setDate'}"/>
+					<m:ObjectStatus class="customOSClass" title="Status" text="{detailViewModel>/Category}"/>
+				</layout:VerticalLayout>
+			</m:FlexBox>
+		</headerContent>
+		<sections>
+			<ObjectPageSection class="sapOPSectionCss">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							<m:VBox >
+								<m:VBox visible="{detailViewModel>/singleOrderTabVisible}">
+									<m:OverflowToolbar>
+										<m:content>
+											<m:Title text="{detailViewModel>/tableTitle}"/>
+											<m:ToolbarSpacer/>
+											<m:SearchField width="25%" placeholder="Search Material Code..." liveChange="onMaterialCodeSearch"/>
+											<m:SearchField width="25%" placeholder="Search Material Name..." liveChange="onMaterialNameSearch"/>
+											<m:DateRangeSelection showFooter="true" width="25%" change="handleDateRangeChange" placeholder="From / To Date"
+												dateValue="{detailViewModel>/fromDate}" secondDateValue="{detailViewModel>/toDate}"/>
+										</m:content>
+									</m:OverflowToolbar>
+									<m:ScrollContainer width="100%" height="500px" horizontal="true" class="sapMSCCss">
+										<m:Table width="125%" id="table" noDataText="There is no data, select date range..." items="{detailViewModel>/items}"
+											sticky="HeaderToolbar,ColumnHeaders">
+											<m:columns>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="MATERIAL CODE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="MATERIAL NAME" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="PLANT CODE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="SCHEDULED QTY." wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="SCHEDULED DATE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="SCHEDULE NO" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="TOTAL DELIVERED QTY." wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="INVOICE NUMBER" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="INVOICE DATE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="INVOICE VALUE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="ASN NO." wrapping="true"/>
+												</m:Column>
+											</m:columns>
+											<m:items>
+												<m:ColumnListItem type="Inactive">
+													<m:cells>
+														<m:Text text="{detailViewModel>MaterialCode}"/>
+														<m:Text text="{detailViewModel>MaterialName}"/>
+														<m:Text text="{detailViewModel>Plant}"/>
+														<m:Text text="{detailViewModel>ScheduleQty}"/>
+														<m:Text text="{path: 'detailViewModel>ScheduleDate', formatter: '.formatter.setDate'}"/>
+														<m:Text text="{detailViewModel>ScheduleLine}"/>
+														<m:Text text="{detailViewModel>DeliveryQty}"/>
+														<m:Text text="{detailViewModel>InvoiceNo}"/>
+														<m:Text text="{path: 'detailViewModel>InvoiceDate', formatter: '.formatter.setDate'}"/>
+														<m:Text text="{detailViewModel>InvoiceValue}"/>
+														<m:Text text="{detailViewModel>AsnId}"/>
+													</m:cells>
+												</m:ColumnListItem>
+											</m:items>
+										</m:Table>
+									</m:ScrollContainer>
+								</m:VBox>
+								<m:VBox visible="{detailViewModel>/allOrderTabVisible}">
+									<m:OverflowToolbar>
+										<m:content>
+											<m:Title text="{detailViewModel>/tableTitle}"/>
+											<m:ToolbarSpacer/>
+											<m:SearchField width="25%" placeholder="Search Material Code..." liveChange="onMaterialCodeSearch1"/>
+											<m:SearchField width="25%" placeholder="Search Material Name..." liveChange="onMaterialNameSearch1"/>
+											<m:DateRangeSelection showFooter="true" width="25%" change="handleDateRangeChange" placeholder="From / To Date"
+												dateValue="{detailViewModel>/fromDate}" secondDateValue="{detailViewModel>/toDate}"/>
+										</m:content>
+									</m:OverflowToolbar>
+									<m:ScrollContainer width="100%" height="550px" horizontal="true" class="sapMSCCss">
+										<m:Table width="180%" id="table1" noDataText="There is no data, select date range..." items="{detailViewModel>/items}"
+											sticky="HeaderToolbar,ColumnHeaders">
+											<m:columns>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="SCHEDULE NO" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="SCHEDULED DATE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="AGREEMENT ID" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="MATERIAL CODE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="MATERIAL NAME" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Phone">
+													<m:Label design="Bold" text="PLANT CODE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="ASN DATE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="ASN QTY." wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="SCHEDULED QTY." wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="TOTAL DELIVERED QTY." wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="INVOICE NUMBER" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="INVOICE DATE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="INVOICE VALUE" wrapping="true"/>
+												</m:Column>
+												<m:Column demandPopin="true" minScreenWidth="Desktop">
+													<m:Label design="Bold" text="ASN NO." wrapping="true"/>
+												</m:Column>
+											</m:columns>
+											<m:items>
+												<m:ColumnListItem type="Inactive">
+													<m:cells>
+														<m:Text text="{detailViewModel>ScheduleLine}"/>
+														<m:Text text="{path: 'detailViewModel>ScheduleDate', formatter: '.formatter.setDate'}"/>
+														<m:Text text="{detailViewModel>AgreementId}"/>
+														<m:Text text="{detailViewModel>MaterialCode}"/>
+														<m:Text text="{detailViewModel>MaterialName}"/>
+														<m:Text text="{detailViewModel>Plant}"/>
+														<m:Text text="{path: 'detailViewModel>AsnCreatedDate', formatter: '.formatter.setDate'}"/>
+														<m:Text text="{detailViewModel>ASNQty}"/>
+														<m:Text text="{detailViewModel>ScheduleQty}"/>
+														<m:Text text="{detailViewModel>DeliveryQty}"/>
+														<m:Text text="{detailViewModel>InvoiceNo}"/>
+														<m:Text text="{path: 'detailViewModel>InvoiceDate', formatter: '.formatter.setDate'}"/>
+														<m:Text text="{detailViewModel>InvoiceValue}"/>
+														<m:Text text="{detailViewModel>AsnId}"/>
+													</m:cells>
+												</m:ColumnListItem>
+											</m:items>
+										</m:Table>
+									</m:ScrollContainer>
+								</m:VBox>
+							</m:VBox>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+		</sections>
+	</ObjectPageLayout>
+</mvc:View>
