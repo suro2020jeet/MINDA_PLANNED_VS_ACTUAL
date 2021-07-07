@@ -11,7 +11,10 @@
 			</OverflowToolbar>
 		</subHeader>
 		<content>
-			<Table mode="SingleSelectMaster" itemPress="onAllOrderPress">
+			<HBox height="3rem" justifyContent="End" visible="{listViewModel>/showAdvancedSearch}" alignItems="Center">
+				<Link text="Advanced Search" press="onAdvancedSearchPress"/>
+			</HBox>
+			<Table mode="SingleSelectMaster" itemPress="onAllOrderPress" visible="{= !${listViewModel>/showAdvancedSearch}}">
 				<columns>
 					<Column ></Column>
 				</columns>

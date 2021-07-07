@@ -10,8 +10,9 @@ sap.ui.define([
 			this.getOwnerComponent().getModel("listViewModel").setProperty("/busy", true);
 			var filter = [];
 			filter.push(new sap.ui.model.Filter("VendorId", sap.ui.model.FilterOperator.EQ, this.getOwnerComponent().getModel("listViewModel").getProperty(
-				"/VendorId")));
-			filter.push(new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, "1031"));
+				"/vendor")));
+			filter.push(new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.EQ, this.getOwnerComponent().getModel("listViewModel").getProperty(
+				"/plant")));
 			filter.push(new sap.ui.model.Filter("PageNumber", sap.ui.model.FilterOperator.EQ, PageNumber));
 			filter.push(new sap.ui.model.Filter("PageSize", sap.ui.model.FilterOperator.EQ, "20"));
 			this.getOwnerComponent().getModel().metadataLoaded().then(function () {
@@ -79,7 +80,7 @@ sap.ui.define([
 					success: function (data, textStatus, jqXHR) {
 						var vendorid = data.groups[0].name;
 						// data = JSON.stringify(data);
-						this.getOwnerComponent().getModel("listViewModel").setProperty("/VendorId", vendorid);
+						this.getOwnerComponent().getModel("listViewModel").setProperty("/vendor", vendorid);
 						this._getAllPlants(vendorid);
 					}.bind(this),
 					error: function (data) {
@@ -101,7 +102,35 @@ sap.ui.define([
 				async: false,
 				success: function (data, textStatus, jqXHR) {
 					var role = data.result.roles[0].name;
-					this._getVendorName(role, user);
+					if (role === "Admin" || role == "Purchase") {
+						this.getOwnerComponent().getModel("listViewModel").setProperty("/showAdvancedSearch", true);
+						this._getPlantsForUser(user);
+					} else {
+						this.getOwnerComponent().getModel("listViewModel").setProperty("/showAdvancedSearch", false);
+						this._getVendorName(role, user);
+					}
+				}.bind(this),
+				error: function (data) {
+					// console.log("error", data);
+				}
+			});
+		},
+		_getPlantsForUser: function (user) {
+			jQuery.ajax({
+				type: "GET",
+				contentType: "application/x-www-form-urlencoded",
+				headers: {
+					"Authorization": "Basic NDMyYjNjZjMtNGE1OS0zOWRiLWEwMWMtYzM5YzhjNGYyNTNkOjk2NTJmOTM0LTkwMmEtMzE1MS05OWNiLWVjZTE1MmJkZGQ1NA=="
+				},
+				url: "/token/accounts/c70391893/users/groups/plants?userId=" + user,
+				dataType: "json",
+				async: false,
+				success: function (data, textStatus, jqXHR) {
+					this.plants = data.plants;
+					// this.currPlant = this.plants.find(x => x.id === this.plant).name;
+					var plantModel = new JSONModel(data);
+					this.getOwnerComponent().setModel(plantModel, "plantModel");
+					this.getOwnerComponent().getModel("listViewModel").setProperty("/busy", false);
 				}.bind(this),
 				error: function (data) {
 					// console.log("error", data);
@@ -120,6 +149,7 @@ sap.ui.define([
 					var user = data.name,
 						name = data.firstName;
 					user = "Delhi@shankarmoulding.com";
+					// user = "akmalhotra@mindagroup.com";
 					this._getCurrentUserRole(user);
 				}.bind(this)
 			});

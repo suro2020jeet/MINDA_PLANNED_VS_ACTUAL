@@ -41,10 +41,10 @@
       "path": "/sap/opu/odata",
       "target": {
         "type": "destination",
-        "name": "minda_qa",
+        "name": "MINDA_HANA_QAS",
         "entryPath": "/sap/opu/odata"
       },
-      "description": "OData"
+      "description": "MINDA_HANA_QAS"
     },{
         "path": "/token",
         "target": {
